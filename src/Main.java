@@ -1,15 +1,20 @@
 import Helpers.GPT;
-
+import Models.Mood;
+import Services.PromptService;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            String prompt = "how many medals did micheal phelps win in the olimics?";
-            String response = GPT.getOpenAIResponse(prompt);
-
-            System.out.println("OpenAI Response: " + response);
-        } catch (Exception e) {
-            e.printStackTrace();
+        PromptService ps = new PromptService();
+        ps.setText("Dear mike, I am sorry to inform you that ");
+        ps.setSubject("Lay off");
+        ps.setTotalNumOfWords(80);
+        ps.setNumOfWordsToBeGenerated(10);
+        ps.setMood(Mood.HATE);
+        try{
+            ps.makePrompt();
+            System.out.println("OUTPUT: " + ps.getOutput());
+        }catch (Exception e){
+            System.out.println(e.getStackTrace());
         }
     }
 

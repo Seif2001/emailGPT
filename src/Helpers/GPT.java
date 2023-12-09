@@ -20,10 +20,15 @@ public class GPT {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        int start = response.body().indexOf("content")+ 11;
+        if (response.statusCode() == 200) {
+            int start = response.body().indexOf("content") + 11;
 
-        int end = response.body().indexOf("\"", start);
+            int end = response.body().indexOf("\"", start);
 
-        return response.body().substring(start, end);
+            return response.body().substring(start, end);
+        }
+        else{
+            throw new Exception("error");
+        }
     }
 }
