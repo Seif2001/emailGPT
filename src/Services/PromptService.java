@@ -9,6 +9,12 @@ public class PromptService {
     public void setText(String words){
         prompt.setInputWords(words);
     }
+    public String getText(){
+        return prompt.getInputWords();
+    }
+    public void addText(String words){
+        prompt.setInputWords(prompt.getInputWords() + words);
+    }
 
     public void setNumOfWordsToBeGenerated(int num){
         prompt.setWordsToBeGenerated(num);
@@ -32,6 +38,7 @@ public class PromptService {
 
     public void acceptPrompt(){
         this.setText(prompt.getOutput());
+        System.out.println(prompt.getInputWords());
     }
 
     public void rejectAndRePrompt() throws Exception{
