@@ -28,7 +28,8 @@ public class GPT {
             return response.body().substring(start, end);
         }
         else{
-            throw new Exception("error");
+
+            return response.body();
         }
     }
 }

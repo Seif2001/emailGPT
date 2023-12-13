@@ -35,6 +35,9 @@ public class PromptService {
     public void makePrompt() throws Exception {
         prompt.setOutput(GPT.getOpenAIResponse(prompt.toString()));
     }
+    public String[] getMoods(){
+        return Mood.names();
+    }
 
     public void acceptPrompt(){
         this.setText(prompt.getOutput());

@@ -1,3 +1,4 @@
+import Controllers.PromptController;
 import GUI.Email;
 import Helpers.GPT;
 import Models.Mood;
@@ -7,7 +8,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Email emailgui = new Email();
         PromptService ps = new PromptService();
         ps.setText("Dear mike, I am sorry to inform you that ");
         ps.setSubject("Lay off");
@@ -15,6 +15,8 @@ public class Main {
         ps.setNumOfWordsToBeGenerated(10);
         ps.setMood(Mood.HATE);
         Scanner input = new Scanner(System.in);
+        PromptController pc = new PromptController();
+
         while (true) {
             System.out.print(ps.getText());
             String line = input.nextLine();
@@ -40,7 +42,6 @@ public class Main {
             }catch (Exception e){
                 System.out.println(e.getStackTrace());
             }
-
         }
 
     }

@@ -1,10 +1,21 @@
 package GUI;
 
+import Models.Mood;
+import Services.PromptService;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class Email extends JFrame {
-    public Email() {
+    PromptService service;
+    JComboBox<String> moodComboBox;
+    JTextField subjectTextField;
+    JTextArea emailTextArea;
+    int gen;
+    public Email(PromptService service) {
+        this.service = service;
         // Set up the frame
         setTitle("Email GUI");
         setSize(500, 600);
@@ -12,17 +23,49 @@ public class Email extends JFrame {
         setLocationRelativeTo(null);
 
         // Create components
-        String[] moodOptions = {"Happy", "Sad", "Excited", "Angry"};
-        JComboBox<String> moodComboBox = new JComboBox<>(moodOptions);
+        String[] moodOptions = this.service.getMoods();
+        moodComboBox = new JComboBox<>(moodOptions);
 
-        JTextField subjectTextField = new JTextField(18);
+        subjectTextField = new JTextField(18);
 
-        JTextArea emailTextArea = new JTextArea(10, 35);
+        emailTextArea = new JTextArea(10, 35);
 
         emailTextArea.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.BLACK),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5) // Adjust the empty border as needed
         ));
+        emailTextArea.setText(this.service.getText());
+        emailTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                textChanged();
+            }
+
+            private void textChanged() {
+                // Call makePrompt when the text changes
+                try {
+                    gen++;
+                    System.out.println(gen);
+                    service.setText(emailTextArea.getText());
+                    updateMood();
+                    updateSubject();
+                    generatePrompt();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace(); // Handle exception appropriately
+                }
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(emailTextArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -61,5 +104,36 @@ public class Email extends JFrame {
         getContentPane().add(mainPanel, BorderLayout.CENTER);
 
         setVisible(true);
+    }
+
+    private void updateMood() {
+        String selectedMood = (String) moodComboBox.getSelectedItem();
+        service.setMood(Mood.valueOf(selectedMood.toUpperCase())); // Assuming Mood is an enum
+    }
+
+    private void updateSubject() {
+        String subject = subjectTextField.getText();
+        service.setSubject(subject);
+    }
+
+    private void generatePrompt() {
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                try {
+                    if(gen == 10) {
+                        service.setText(emailTextArea.getText());
+                        service.makePrompt();
+                        System.out.println(service.getOutput());
+                        gen = 0;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace(); // Handle exception appropriately
+                }
+                return null;
+            }
+        };
+
+        worker.execute();
     }
 }

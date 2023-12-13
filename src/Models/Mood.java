@@ -7,5 +7,15 @@ public enum Mood {
     HATE,
     FORMAL,
     CASUAL,
-    FRIENDLY
+    FRIENDLY;
+    public static String[] names() {
+        Mood[] states = values();
+        String[] names = new String[states.length];
+
+        for (int i = 0; i < states.length; i++) {
+            names[i] = states[i].name();
+        }
+
+        return names;
+    }
 }
