@@ -16,16 +16,16 @@ public class PromptService {
         prompt.setInputWords(prompt.getInputWords() + words);
     }
 
-    public void setNumOfWordsToBeGenerated(int num){
-        prompt.setWordsToBeGenerated(num);
-    }
-
     public void setSubject(String subject){
         prompt.setSubject(subject);
     }
 
     public void setMood(Mood mood){
         prompt.setMood(mood);
+    }
+
+    public void setLength(Length length){
+        prompt.setLength(length);
     }
 
     public void setTotalNumOfWords(int total){
@@ -39,13 +39,17 @@ public class PromptService {
         return Mood.names();
     }
 
+    public String[] getLengths(){
+        return Length.names();
+    }
+
     public void acceptPrompt(){
         this.setText(prompt.getOutput());
         System.out.println(prompt.getInputWords());
     }
 
     public void rejectAndRePrompt() throws Exception{
-        prompt.setOutput(GPT.getOpenAIResponse("I did not like this response please phrase it differently."));
+        makePrompt();
     }
     public String getOutput(){
         return prompt.getOutput();

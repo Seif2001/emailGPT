@@ -13,8 +13,13 @@ public class Prompt {
         return mood;
     }
 
-    public void setMood(Mood mood) {
-        this.mood = mood;
+    public void setMood(Mood mood) {this.mood = mood;}
+    public Length getLength() {
+        return length;
+    }
+
+    public void setLength(Length length) {
+        this.length = length;
     }
 
     public int getTotalNumOfWords() {
@@ -23,14 +28,6 @@ public class Prompt {
 
     public void setTotalNumOfWords(int totalNumOfWords) {
         this.totalNumOfWords = totalNumOfWords;
-    }
-
-    public int getWordsToBeGenerated() {
-        return wordsToBeGenerated;
-    }
-
-    public void setWordsToBeGenerated(int wordsToBeGenerated) {
-        this.wordsToBeGenerated = wordsToBeGenerated;
     }
 
     public String getOutput() {
@@ -52,22 +49,22 @@ public class Prompt {
     private String inputWords;
     private String subject;
     private Mood mood;
+    private Length length;
     private int totalNumOfWords;
-    private int wordsToBeGenerated;
     private String output;
     public Prompt(){
 
     }
-    public Prompt(String subject,String inputWords, Mood mood, int totalNumOfWords, int wordsToBeGenerated) {
+    public Prompt(String subject,String inputWords, Mood mood, Length length, int totalNumOfWords) {
         this.inputWords = inputWords;
         this.subject = subject;
         this.mood = mood;
+        this.length = length;
         this.totalNumOfWords = totalNumOfWords;
-        this.wordsToBeGenerated = wordsToBeGenerated;
     }
 
     @Override
     public String toString() {
-        return "Help me draft an email about " + subject + " I've started with the following i want my tone to be " + mood.toString()+": ' "+inputWords+" ' "+ "Can you please continue the email, adding " + wordsToBeGenerated + " words each time? Thanks!";
+        return "Help me draft an email about " + subject + " I want my tone to be " + mood.toString() + ", and I want it to be of length of about " + length.getLength() + " words. Here is what I wrote till now: " + inputWords;
     }
 }
