@@ -18,10 +18,18 @@ public class Email extends JFrame {
     JTextField subjectTextField;
     JTextArea emailTextArea;
     JTextArea additionalTextArea;
+    private Timer debounceTimer;
+
     int gen;
     public Email(PromptService service) {
         this.service = service;
-        // Set up the frame
+        this.debounceTimer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generatePrompt();
+            }
+        });
+        this.debounceTimer.setRepeats(false);        // Set up the frame
         setTitle("Email GUI");
         setSize(500, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,7 +55,9 @@ public class Email extends JFrame {
                 BorderFactory.createEmptyBorder(5, 5, 5, 5) // Adjust the empty border as needed
         ));
         emailTextArea.setText(this.service.getText());
+        emailTextArea.setLineWrap(true);
         emailTextArea.getDocument().addDocumentListener(new DocumentListener() {
+
             @Override
             public void insertUpdate(DocumentEvent e) {
                 textChanged();
@@ -68,11 +78,13 @@ public class Email extends JFrame {
                 try {
                     gen++;
                     System.out.println(gen);
+                    debounceTimer.restart(); // Restart the timer upon text change
                     service.setText(emailTextArea.getText());
                     updateMood();
                     updateLength();
                     updateSubject();
-                    generatePrompt();
+                    //generatePrompt();
+
 
                 } catch (Exception ex) {
                     ex.printStackTrace(); // Handle exception appropriately
@@ -127,6 +139,7 @@ public class Email extends JFrame {
                 BorderFactory.createLineBorder(Color.BLACK),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5) // Adjust the empty border as needed
         ));
+        additionalTextArea.setLineWrap(true);
         JScrollPane additionalScrollPane = new JScrollPane(additionalTextArea);
         additionalScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -187,11 +200,13 @@ public class Email extends JFrame {
             @Override
             protected Void doInBackground() throws Exception {
                 try {
-                    if(gen == 10) {
-                        gen = 0;
+                    if(gen > 10) {
                         service.setText(emailTextArea.getText());
                         service.makePrompt();
                         additionalTextArea.setText(service.getOutput());
+                        gen = 0;
+
+                        debounceTimer.restart();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace(); // Handle exception appropriately
