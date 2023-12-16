@@ -47,11 +47,7 @@ public class PromptService {
         this.setText(prompt.getOutput());
         System.out.println(prompt.getInputWords());
     }
-
-    public void rejectAndRePrompt() throws Exception{
-        makePrompt();
-    }
     public String getOutput(){
-        return prompt.getOutput();
+        return prompt.getOutput().replace("\\n","\n");
     }
 }

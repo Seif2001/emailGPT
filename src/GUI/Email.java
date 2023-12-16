@@ -47,6 +47,8 @@ public class Email extends JFrame {
                 BorderFactory.createEmptyBorder(5, 5, 5, 5) // Adjust the empty border as needed
         ));
         emailTextArea.setText(this.service.getText());
+        emailTextArea.setLineWrap(true);
+        emailTextArea.setWrapStyleWord(true);
         emailTextArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -68,10 +70,6 @@ public class Email extends JFrame {
                 try {
                     gen++;
                     System.out.println(gen);
-                    service.setText(emailTextArea.getText());
-                    updateMood();
-                    updateLength();
-                    updateSubject();
                     generatePrompt();
 
                 } catch (Exception ex) {
@@ -123,6 +121,8 @@ public class Email extends JFrame {
         // Create an additional uneditable text area
         additionalTextArea = new JTextArea(10, 35);
         additionalTextArea.setEditable(false);
+        additionalTextArea.setLineWrap(true);
+        additionalTextArea.setWrapStyleWord(true);
         additionalTextArea.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.BLACK),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5) // Adjust the empty border as needed
@@ -190,8 +190,12 @@ public class Email extends JFrame {
                     if(gen == 10) {
                         gen = 0;
                         service.setText(emailTextArea.getText());
+                        updateMood();
+                        updateLength();
+                        updateSubject();
                         service.makePrompt();
                         additionalTextArea.setText(service.getOutput());
+
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace(); // Handle exception appropriately
@@ -208,8 +212,12 @@ public class Email extends JFrame {
             @Override
             protected Void doInBackground() throws Exception {
                 try {
-                        service.rejectAndRePrompt();
-                        additionalTextArea.setText(service.getOutput());
+                    service.setText(emailTextArea.getText());
+                    updateMood();
+                    updateLength();
+                    updateSubject();
+                    service.makePrompt();
+                    additionalTextArea.setText(service.getOutput());
                 } catch (Exception ex) {
                     ex.printStackTrace(); // Handle exception appropriately
                 }
