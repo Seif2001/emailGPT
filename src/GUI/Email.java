@@ -70,7 +70,7 @@ public class Email extends JFrame {
                 updateSubject();
                 updateMood();
                 updateLength();
-                generatePrompt();
+
             }
         });
 
@@ -80,7 +80,6 @@ public class Email extends JFrame {
                 updateSubject();
                 updateMood();
                 updateLength();
-                generatePrompt();
             }
         });
 
@@ -176,7 +175,6 @@ public class Email extends JFrame {
 
         // Create buttons
         JButton button1 = new JButton("Accept");
-        JButton button2 = new JButton("Retry");
 
         // Add ActionListener for Button 1
         button1.addActionListener(new ActionListener() {
@@ -187,18 +185,12 @@ public class Email extends JFrame {
         });
 
         // Add ActionListener for Button 2
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reGeneratePrompt();
-            }
-        });
+
 
         // Create a panel to hold buttons horizontally centered
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(button1);
-        buttonPanel.add(button2);
 
 
         mainPanel.add(additionalScrollPane);
@@ -231,7 +223,7 @@ public class Email extends JFrame {
             @Override
             protected Void doInBackground() throws Exception {
                 try {
-                    if(gen > 10) {
+                    if(gen > 3) {
                         gen = 0;
                         service.setText(emailTextArea.getText());
                         service.makePrompt();
@@ -248,24 +240,24 @@ public class Email extends JFrame {
         worker.execute();
     }
 
-    private void reGeneratePrompt() {
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                try {
-                    service.setText(emailTextArea.getText());
-                    updateMood();
-                    updateLength();
-                    updateSubject();
-                    service.makePrompt();
-                    additionalTextArea.setText(service.getOutput());
-                } catch (Exception ex) {
-                    ex.printStackTrace(); // Handle exception appropriately
-                }
-                return null;
-            }
-        };
-
-        worker.execute();
-    }
+//    private void reGeneratePrompt() {
+//        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+//            @Override
+//            protected Void doInBackground() throws Exception {
+//                try {
+//                    service.setText(emailTextArea.getText());
+//                    updateMood();
+//                    updateLength();
+//                    updateSubject();
+//                    service.makePrompt();
+//                    additionalTextArea.setText(service.getOutput());
+//                } catch (Exception ex) {
+//                    ex.printStackTrace(); // Handle exception appropriately
+//                }
+//                return null;
+//            }
+//        };
+//
+//        worker.execute();
+//    }
 }
