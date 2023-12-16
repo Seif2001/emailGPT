@@ -8,8 +8,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class Email extends JFrame {
     PromptService service;
@@ -23,13 +22,14 @@ public class Email extends JFrame {
     int gen;
     public Email(PromptService service) {
         this.service = service;
-        this.debounceTimer = new Timer(500, new ActionListener() {
+        this.debounceTimer = new Timer(2000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 generatePrompt();
             }
         });
-        this.debounceTimer.setRepeats(false);           setTitle("Email GUI");
+        this.debounceTimer.setRepeats(false);
+        setTitle("Email GUI");
         setSize(500, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -56,6 +56,34 @@ public class Email extends JFrame {
         emailTextArea.setText(this.service.getText());
         emailTextArea.setLineWrap(true);
         emailTextArea.setWrapStyleWord(true);
+        emailTextArea.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_TAB) {
+                    emailTextArea.setText(additionalTextArea.getText());
+                }
+            }
+        });
+        moodComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateSubject();
+                updateMood();
+                updateLength();
+                generatePrompt();
+            }
+        });
+
+        lengthComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateSubject();
+                updateMood();
+                updateLength();
+                generatePrompt();
+            }
+        });
+
         emailTextArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -77,14 +105,21 @@ public class Email extends JFrame {
                 try {
                     gen++;
                     System.out.println(gen);
+                    updateMood();
+                    updateLength();
+                    updateSubject();
                     debounceTimer.restart(); // Restart the timer upon text change
-                    generatePrompt();
+
+                    //generatePrompt();
 
                 } catch (Exception ex) {
                     ex.printStackTrace(); // Handle exception appropriately
                 }
             }
         });
+
+
+
         JScrollPane scrollPane = new JScrollPane(emailTextArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -201,6 +236,7 @@ public class Email extends JFrame {
                         service.setText(emailTextArea.getText());
                         service.makePrompt();
                         additionalTextArea.setText(service.getOutput());
+
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace(); // Handle exception appropriately

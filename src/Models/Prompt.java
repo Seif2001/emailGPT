@@ -65,6 +65,6 @@ public class Prompt {
 
     @Override
     public String toString() {
-        return "Help me draft an email about " + subject + " I want my tone to be " + mood.toString() + ", and I want it to be of length of about " + length.getLength() + " words. Please provide the full email body without the subject, here is what I wrote till now: " + inputWords;
+        return "Help me draft an email about " + subject + " I want my tone to be " + mood.toString() + ", and I want it to be of length of about " + length.getLength() + " words. Please provide the full email body without the subject, and make sure that you include what I already wrote in the email that you will generate and format it in a full email format keeping a neat format. here is what I wrote till now: " + inputWords;
     }
 }
