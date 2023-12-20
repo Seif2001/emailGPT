@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GPT {
-    private static final String API_KEY = "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";
+    private static final String API_KEY = "";
     private static final String API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
 
 
